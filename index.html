@@ -1,0 +1,3839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b5cab">
+<meta name="description" content="Ghaziabad.exe — an interactive Windows XP-style time capsule of Ghaziabad and early-2000s Indian internet culture.">
+<meta property="og:title" content="Ghaziabad.exe">
+<meta property="og:description" content="Step into a Ghaziabad cyber café from the 2000s. Explore Orkut, Yahoo Messenger, LAN games, MP3s, school memories and hidden easter eggs.">
+<title>Ghaziabad.exe — Ghaziabad Cyber Café Time Capsule</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden
+}
+
+body{
+  font-family:Tahoma,Verdana,Arial,sans-serif;
+  background:#0875c9;
+  color:#111;
+  font-size:12px
+}
+
+button,input,textarea{
+  font:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+:focus{
+  outline:2px solid #fff;
+  outline-offset:-2px
+}
+
+#desktop{
+  position:fixed;
+  inset:0;
+  background:
+   radial-gradient(ellipse at 75% 15%,rgba(255,255,255,.26),transparent 22%),
+   radial-gradient(ellipse at 20% 95%,rgba(255,255,255,.15),transparent 26%),
+   linear-gradient(180deg,#1688d2 0%,#0872c4 50%,#0756a0 100%);
+  overflow:hidden
+}
+
+#desktop:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ opacity:.08;
+ background:repeating-linear-gradient(
+   0deg,
+   transparent 0 3px,
+   rgba(255,255,255,.3) 4px
+ );
+ pointer-events:none
+}
+
+/* XP DESKTOP ICONS */
+
+.desktop-icons{
+  position:absolute;
+  top:12px;
+  left:12px;
+  bottom:52px;
+  width:440px;
+  display:grid;
+  grid-template-columns:repeat(4,82px);
+  grid-auto-rows:82px;
+  gap:6px 10px;
+  align-content:start;
+  z-index:2
+}
+
+.desktop-icon{
+ width:78px;
+ height:78px;
+ background:transparent;
+ border:1px solid transparent;
+ color:#fff;
+ text-shadow:1px 1px 2px #003b72;
+ padding:4px 2px;
+ border-radius:2px;
+ text-align:center
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus{
+  background:rgba(0,70,150,.28);
+  border-color:rgba(255,255,255,.4)
+}
+
+.desktop-icon .ico{
+  display:block;
+  font-size:33px;
+  height:40px;
+  line-height:38px;
+  filter:drop-shadow(1px 2px 1px rgba(0,0,0,.45))
+}
+
+.desktop-icon .label{
+  display:block;
+  line-height:14px;
+  font-size:11px
+}
+
+/* TASKBAR */
+
+#taskbar{
+ position:fixed;
+ left:0;
+ right:0;
+ bottom:0;
+ height:36px;
+ z-index:1000;
+ display:flex;
+ align-items:center;
+ padding:2px 3px;
+ background:linear-gradient(
+   #3b9ee2 0%,
+   #1977bd 48%,
+   #0756a0 52%,
+   #0a61aa 100%
+ );
+ border-top:1px solid #68bdf3;
+ box-shadow:0 -1px 3px rgba(0,0,0,.35)
+}
+
+#startButton{
+ height:32px;
+ min-width:105px;
+ border-radius:0 10px 10px 0;
+ border:1px solid #285d25;
+ color:white;
+ font-weight:bold;
+ font-style:italic;
+ font-size:14px;
+ text-shadow:1px 1px 1px #24601e;
+ background:linear-gradient(
+   #6dc95b,
+   #3b9f35 48%,
+   #2c7d2a 52%,
+   #2f8e2c
+ );
+ box-shadow:
+   inset 0 1px rgba(255,255,255,.65),
+   2px 0 3px rgba(0,0,0,.2)
+}
+
+#startButton span{
+ font-size:20px;
+ margin-right:3px;
+ vertical-align:-2px
+}
+
+#taskButtons{
+ display:flex;
+ gap:3px;
+ margin-left:5px;
+ min-width:0;
+ overflow:hidden
+}
+
+.task-button{
+ height:29px;
+ min-width:130px;
+ max-width:190px;
+ padding:0 9px;
+ text-align:left;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ color:#fff;
+ border:1px solid #084e8d;
+ border-radius:2px;
+ background:linear-gradient(#4b9bd4,#1b70b3)
+}
+
+.task-button.active{
+ background:linear-gradient(#145b9e,#08457f);
+ box-shadow:inset 1px 1px 3px #00386d
+}
+
+#tray{
+ margin-left:auto;
+ height:29px;
+ display:flex;
+ align-items:center;
+ gap:9px;
+ padding:0 10px;
+ border-left:1px solid rgba(0,0,0,.25);
+ color:#fff;
+ font-size:11px;
+ white-space:nowrap
+}
+
+/* START MENU */
+
+#startMenu{
+ position:fixed;
+ left:2px;
+ bottom:36px;
+ width:350px;
+ z-index:1200;
+ display:none;
+ border:2px solid #12528e;
+ box-shadow:5px 5px 12px rgba(0,0,0,.5);
+ background:#f1f1f1
+}
+
+#startMenu.open{
+ display:block
+}
+
+.start-head{
+ height:55px;
+ color:#fff;
+ padding:8px 12px;
+ font-size:16px;
+ font-weight:bold;
+ background:linear-gradient(90deg,#145fa7,#3d9ad4)
+}
+
+.start-head small{
+ display:block;
+ font-size:10px;
+ font-weight:normal;
+ opacity:.9;
+ margin-top:2px
+}
+
+.start-body{
+ display:grid;
+ grid-template-columns:1fr 132px;
+ min-height:285px
+}
+
+.start-left{
+ background:#fff;
+ padding:7px
+}
+
+.start-right{
+ background:#e8eef5;
+ padding:7px;
+ border-left:1px solid #ccc
+}
+
+.start-item{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ width:100%;
+ padding:8px 7px;
+ border:0;
+ background:transparent;
+ text-align:left
+}
+
+.start-item:hover,
+.start-item:focus{
+ background:#316ac5;
+ color:#fff
+}
+
+.start-item .si{
+ font-size:25px;
+ width:32px;
+ text-align:center
+}
+
+.start-sep{
+ border-top:1px solid #ccc;
+ margin:5px
+}
+
+.start-right .start-item{
+ font-size:11px
+}
+
+/* WINDOWS */
+
+.xp-window{
+ position:absolute;
+ display:none;
+ width:620px;
+ max-width:calc(100vw - 16px);
+ background:#ece9d8;
+ border:2px solid #0b4e8e;
+ border-radius:7px 7px 0 0;
+ box-shadow:6px 7px 14px rgba(0,0,0,.45);
+ z-index:20
+}
+
+.xp-window.open{
+ display:block
+}
+
+.titlebar{
+ height:29px;
+ border-radius:5px 5px 0 0;
+ display:flex;
+ align-items:center;
+ padding-left:7px;
+ color:#fff;
+ font-weight:bold;
+ font-size:12px;
+ background:linear-gradient(
+   #4f9ee1 0%,
+   #2475bd 45%,
+   #0c55a0 55%,
+   #0a4e91 100%
+ );
+ cursor:grab;
+ user-select:none
+}
+
+.titlebar:active{
+ cursor:grabbing
+}
+
+.titlebar .title{
+ flex:1;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis
+}
+
+.win-controls{
+ display:flex;
+ gap:2px;
+ margin-right:3px
+}
+
+.win-control{
+ width:21px;
+ height:20px;
+ padding:0;
+ border:1px solid #124b82;
+ border-radius:3px;
+ color:#fff;
+ font-weight:bold;
+ line-height:16px;
+ background:linear-gradient(#78b9eb,#1c65a8)
+}
+
+.win-control:hover{
+ background:linear-gradient(#a5d2f2,#347fbe)
+}
+
+.window-content{
+ padding:9px;
+ max-height:calc(100vh - 105px);
+ overflow:auto
+}
+
+.xp-panel{
+ background:#fff;
+ border:1px solid #aaa;
+ box-shadow:inset 1px 1px #eee;
+ padding:10px
+}
+
+.xp-toolbar{
+ background:linear-gradient(#fff,#ddd);
+ border:1px solid #aaa;
+ padding:5px;
+ display:flex;
+ gap:4px;
+ align-items:center
+}
+
+.xp-btn{
+ border:1px solid #777;
+ border-radius:3px;
+ padding:5px 10px;
+ background:linear-gradient(#fff,#e5e5e5);
+ box-shadow:inset 0 1px #fff
+}
+
+.xp-btn:hover{
+ background:linear-gradient(#fff,#d1e5f7)
+}
+
+.xp-btn:active{
+ box-shadow:inset 1px 1px 2px #777
+}
+
+.xp-input{
+ border:2px inset #aaa;
+ padding:5px;
+ background:#fff
+}
+
+.xp-status{
+ font-size:11px;
+ color:#555;
+ margin-top:7px;
+ min-height:14px
+}
+
+/* WELCOME */
+
+.welcome-head{
+ margin:-9px -9px 9px;
+ padding:18px;
+ color:#fff;
+ background:linear-gradient(135deg,#0756a0,#1687d0)
+}
+
+.welcome-head .tiny{
+ font-size:10px;
+ opacity:.8;
+ letter-spacing:.4px
+}
+
+.welcome-head h1{
+ font-size:24px;
+ margin:6px 0 3px
+}
+
+.welcome-head p{
+ margin:0;
+ font-size:12px;
+ max-width:540px;
+ line-height:1.45
+}
+
+.receipt{
+ background:#fffef0;
+ border:1px dashed #888;
+ padding:10px;
+ font-family:"Courier New",monospace;
+ font-size:11px;
+ line-height:1.5
+}
+
+.memory-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px
+}
+
+.memory-card{
+ border:1px solid #aaa;
+ background:#fff;
+ padding:9px;
+ min-height:105px
+}
+
+.memory-card h3{
+ font-size:13px;
+ color:#0756a0;
+ margin:0 0 5px
+}
+
+.memory-card p{
+ margin:0;
+ line-height:1.4
+}
+
+.memory-card .emoji{
+ font-size:24px;
+ float:right
+}
+
+/* INTERNET EXPLORER */
+
+.address{
+ display:flex;
+ gap:5px;
+ align-items:center;
+ margin-bottom:7px
+}
+
+.address input{
+ flex:1;
+ min-width:0
+}
+
+.ie-page{
+ border:1px solid #aaa;
+ background:#fff;
+ min-height:300px
+}
+
+.ie-banner{
+ padding:12px;
+ background:linear-gradient(135deg,#f8f8f8,#dcecf8);
+ border-bottom:1px solid #aaa
+}
+
+.ie-banner h2{
+ margin:0;
+ color:#e45b21;
+ font-size:20px
+}
+
+.ie-content{
+ padding:10px
+}
+
+.web-result{
+ border:1px solid #ccc;
+ margin:7px 0;
+ padding:8px;
+ background:#fafafa
+}
+
+.web-result h3{
+ margin:0 0 3px;
+ color:#0756a0
+}
+
+/* MESSENGER */
+
+.messenger{
+ display:grid;
+ grid-template-columns:155px 1fr;
+ min-height:300px
+}
+
+.contacts{
+ background:#f6f6f6;
+ border-right:1px solid #aaa;
+ padding:7px
+}
+
+.contact{
+ padding:7px;
+ background:#fff;
+ border:1px solid #ddd;
+ margin-bottom:5px
+}
+
+.online{
+ color:#168b20;
+ font-weight:bold
+}
+
+.offline{
+ color:#777
+}
+
+.chat-area{
+ background:#fff;
+ display:flex;
+ flex-direction:column
+}
+
+.chat-log{
+ flex:1;
+ padding:9px;
+ overflow:auto;
+ font-size:11px;
+ background:#fff
+}
+
+.chat-msg{
+ margin:6px 0
+}
+
+.chat-msg b{
+ color:#0756a0
+}
+
+.chat-system{
+ color:#777;
+ font-style:italic
+}
+
+.chat-send{
+ display:flex;
+ padding:6px;
+ border-top:1px solid #aaa;
+ gap:4px
+}
+
+/* MEDIA PLAYER */
+
+.media{
+ background:#111;
+ color:#fff;
+ padding:11px;
+ min-height:310px
+}
+
+.media-top{
+ display:flex;
+ gap:10px;
+ align-items:center
+}
+
+.album{
+ width:100px;
+ height:100px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,#5a5a5a,#111);
+ border:3px solid #777;
+ font-size:42px
+}
+
+.media h2{
+ margin:0;
+ font-size:15px
+}
+
+.media small{
+ color:#bbb
+}
+
+.equalizer{
+ display:flex;
+ align-items:end;
+ gap:3px;
+ height:38px;
+ margin-top:10px
+}
+
+.equalizer i{
+ width:6px;
+ background:#55d84b;
+ height:12px
+}
+
+.equalizer i:nth-child(2){height:30px}
+.equalizer i:nth-child(3){height:20px}
+.equalizer i:nth-child(4){height:34px}
+.equalizer i:nth-child(5){height:16px}
+
+.tracklist{
+ margin-top:12px;
+ background:#222;
+ border:1px solid #555
+}
+
+.track{
+ padding:6px;
+ border-bottom:1px solid #444;
+ cursor:pointer
+}
+
+.track:hover{
+ background:#333
+}
+
+.track:last-child{
+ border-bottom:0
+}
+
+/* GAME */
+
+.game-wrap{
+ background:#1b1b1b;
+ color:#fff;
+ padding:12px;
+ text-align:center
+}
+
+#snake{
+ width:286px;
+ height:286px;
+ margin:10px auto;
+ background:#071407;
+ border:6px inset #aaa;
+ display:grid;
+ grid-template-columns:repeat(14,1fr);
+ touch-action:none
+}
+
+.snake-cell.snake{
+ background:#3ed343
+}
+
+.snake-cell.food{
+ background:#ffd735;
+ border-radius:50%
+}
+
+.dpad button{
+ width:42px;
+ height:32px;
+ margin:2px
+}
+
+.game-score{
+ color:#8be6ff;
+ font-family:monospace
+}
+
+/* NOTEPAD / GUESTBOOK */
+
+textarea.note{
+ width:100%;
+ height:270px;
+ resize:vertical;
+ border:2px inset #aaa;
+ padding:9px;
+ background:#fffdf0;
+ font:13px "Courier New",monospace
+}
+
+.guest-entry{
+ background:#fff;
+ border:1px solid #bbb;
+ padding:8px;
+ margin:7px 0
+}
+
+.guest-entry strong{
+ color:#0756a0
+}
+
+.guest-entry small{
+ color:#777
+}
+
+/* SECRET */
+
+#secretOverlay{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.76);
+ z-index:3000;
+ display:none;
+ align-items:center;
+ justify-content:center
+}
+
+#secretOverlay.show{
+ display:flex
+}
+
+.secret-box{
+ width:min(500px,90vw);
+ background:#ece9d8;
+ border:2px solid #0b4e8e;
+ box-shadow:8px 8px 20px #000
+}
+
+.secret-box h2{
+ margin:0;
+ padding:9px;
+ color:#fff;
+ background:linear-gradient(#4f9ee1,#0a4e91);
+ font-size:13px
+}
+
+.secret-box .secret-body{
+ padding:18px;
+ text-align:center
+}
+
+.secret-body .big{
+ font-size:42px
+}
+
+.secret-body p{
+ line-height:1.5
+}
+
+/* BOOT */
+
+#boot{
+ position:fixed;
+ inset:0;
+ background:#000;
+ color:#aaa;
+ z-index:5000;
+ font-family:"Courier New",monospace;
+ display:flex;
+ align-items:center;
+ justify-content:center
+}
+
+.bootbox{
+ width:min(600px,90vw);
+ padding:20px
+}
+
+.boot-title{
+ color:#fff;
+ font-size:18px;
+ margin-bottom:22px
+}
+
+.boot-line{
+ margin:8px 0
+}
+
+.boot-line b{
+ color:#fff
+}
+
+.bootbar{
+ height:13px;
+ border:1px solid #666;
+ margin-top:20px
+}
+
+.bootbar i{
+ display:block;
+ height:100%;
+ width:0;
+ background:#aaa
+}
+
+.boot-enter{
+ text-align:center;
+ color:#fff;
+ margin-top:20px;
+ animation:blink 1s steps(2) infinite
+}
+
+@keyframes blink{
+ 50%{opacity:0}
+}
+
+/* STATUS */
+
+#status{
+ position:fixed;
+ left:8px;
+ bottom:42px;
+ z-index:1600;
+ background:#111;
+ color:#fff;
+ border-radius:3px;
+ padding:6px 9px;
+ opacity:0;
+ pointer-events:none;
+ transition:opacity .15s;
+ box-shadow:2px 2px 5px #000;
+ font-size:11px
+}
+
+#status.show{
+ opacity:.94
+}
+
+/* MUSIC BAR */
+
+#musicBar{
+ position:fixed;
+ right:8px;
+ bottom:42px;
+ width:300px;
+ z-index:1500;
+ background:#202020;
+ color:#fff;
+ border:1px solid #666;
+ box-shadow:3px 3px 9px #000;
+ padding:6px;
+ display:flex;
+ gap:7px;
+ align-items:center
+}
+
+#musicBar .disc{
+ font-size:23px
+}
+
+.music-info{
+ min-width:0;
+ flex:1;
+ font-size:10px
+}
+
+.music-info b{
+ display:block;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis
+}
+
+.music-info a{
+ color:#9ddcff
+}
+
+#musicBar .mini-close{
+ width:20px;
+ height:20px;
+ background:#444;
+ color:#fff;
+ border:1px solid #777
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+ body{
+   overflow:auto
+ }
+
+ #desktop{
+   position:relative;
+   min-height:100vh;
+   height:auto;
+   overflow:auto;
+   padding-bottom:42px
+ }
+
+ .desktop-icons{
+   position:relative;
+   top:auto;
+   left:auto;
+   bottom:auto;
+   width:100%;
+   grid-template-columns:repeat(4,1fr);
+   grid-auto-rows:76px;
+   padding:10px 5px 70px;
+   gap:3px
+ }
+
+ .desktop-icon{
+   width:100%
+ }
+
+ .xp-window{
+   position:fixed!important;
+   left:6px!important;
+   top:45px!important;
+   width:calc(100vw - 12px)!important;
+   max-height:calc(100vh - 88px)
+ }
+
+ .window-content{
+   max-height:calc(100vh - 120px)
+ }
+
+ #startMenu{
+   width:calc(100vw - 8px)
+ }
+
+ .memory-grid{
+   grid-template-columns:1fr
+ }
+
+ .messenger{
+   grid-template-columns:1fr
+ }
+
+ .contacts{
+   display:none
+ }
+
+ #musicBar{
+   width:calc(100vw - 16px)
+ }
+
+ #tray{
+   font-size:10px
+ }
+
+ .task-button{
+   min-width:105px
+ }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+ *{
+   animation:none!important;
+   transition:none!important
+ }
+
+}
+</style>
+</head>
+
+<body>
+
+<div id="boot" role="dialog" aria-label="Ghaziabad.exe startup">
+
+ <div class="bootbox">
+
+  <div class="boot-title">
+   GHAZIABAD.EXE — CHILDHOOD EDITION
+  </div>
+
+  <div class="boot-line">
+   Detecting modem........ <b>OK</b>
+  </div>
+
+  <div class="boot-line">
+   Detecting LAN.......... <b>OK</b>
+  </div>
+
+  <div class="boot-line">
+   Loading Orkut......... <b>OK</b>
+  </div>
+
+  <div class="boot-line">
+   Loading Yahoo!........ <b>OK</b>
+  </div>
+
+  <div class="boot-line">
+   Loading GTA_VC......... <b>OK</b>
+  </div>
+
+  <div class="boot-line">
+   Loading childhood..... <b>OK</b>
+  </div>
+
+  <div class="bootbar">
+   <i id="bootProgress"></i>
+  </div>
+
+  <div class="boot-enter">
+   PRESS ENTER OR TAP TO START
+  </div>
+
+ </div>
+
+</div>
+
+
+<div id="desktop" aria-label="Windows XP style Ghaziabad.exe desktop">
+
+ <div class="desktop-icons" aria-label="Desktop">
+
+  <button class="desktop-icon" data-open="mycomputer">
+   <span class="ico">🖥️</span>
+   <span class="label">My Computer</span>
+  </button>
+
+  <button class="desktop-icon" data-open="internet">
+   <span class="ico">🌐</span>
+   <span class="label">Internet Explorer</span>
+  </button>
+
+  <button class="desktop-icon" data-open="games">
+   <span class="ico">🎮</span>
+   <span class="label">Games</span>
+  </button>
+
+  <button class="desktop-icon" data-open="music">
+   <span class="ico">💿</span>
+   <span class="label">My Music</span>
+  </button>
+
+  <button class="desktop-icon" data-open="messenger">
+   <span class="ico">💬</span>
+   <span class="label">Yahoo! Messenger</span>
+  </button>
+
+  <button class="desktop-icon" data-open="photos">
+   <span class="ico">📷</span>
+   <span class="label">My Pictures</span>
+  </button>
+
+  <button class="desktop-icon" data-open="notepad">
+   <span class="ico">📝</span>
+   <span class="label">Important.txt</span>
+  </button>
+
+  <button class="desktop-icon" data-open="guestbook">
+   <span class="ico">📖</span>
+   <span class="label">Guestbook</span>
+  </button>
+
+  <button class="desktop-icon" data-open="recycle">
+   <span class="ico">🗑️</span>
+   <span class="label">Recycle Bin</span>
+  </button>
+
+  <button class="desktop-icon" data-open="about">
+   <span class="ico">💾</span>
+   <span class="label">Ghaziabad.exe</span>
+  </button>
+
+ </div>
+
+
+ <!-- MY COMPUTER -->
+
+ <section
+  class="xp-window"
+  id="mycomputer"
+  style="left:12%;top:10%;width:650px"
+  aria-labelledby="mc-title"
+ >
+
+  <div class="titlebar">
+
+   <span class="title" id="mc-title">
+    My Computer
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+  <div class="window-content">
+
+   <div class="xp-toolbar">
+
+    <button class="xp-btn" data-open="welcome">
+     Back
+    </button>
+
+    <span>
+     Address:
+    </span>
+
+    <input
+     class="xp-input"
+     value="C:\Documents and Settings\Avii"
+     readonly
+     style="flex:1"
+    >
+
+   </div>
+
+
+   <div
+    class="xp-panel"
+    style="margin-top:8px"
+   >
+
+    <h3
+     style="margin:0 0 10px;color:#0756a0"
+    >
+     Files Stored On This Computer
+    </h3>
+
+    <div class="memory-grid">
+
+     <div class="memory-card">
+
+      <span class="emoji">📁</span>
+
+      <h3>
+       My Documents
+      </h3>
+
+      <p>
+       School projects, photocopied notes and files named
+       <b>final.doc</b>.
+      </p>
+
+     </div>
+
+
+     <div class="memory-card">
+
+      <span class="emoji">📁</span>
+
+      <h3>
+       My Music
+      </h3>
+
+      <p>
+       Folders called NEW SONGS, BEST, FINAL, FINAL2 and FINAL_REAL.
+      </p>
+
+     </div>
+
+
+     <div class="memory-card">
+
+      <span class="emoji">📁</span>
+
+      <h3>
+       Games
+      </h3>
+
+      <p>
+       GTA Vice City, Counter-Strike 1.6, Road Rash and NFS Underground.
+      </p>
+
+     </div>
+
+
+     <div class="memory-card">
+
+      <span class="emoji">📁</span>
+
+      <h3>
+       My Pictures
+      </h3>
+
+      <p>
+       School gates, colony cricket, blurry birthdays and cyber-café memories.
+      </p>
+
+     </div>
+
+    </div>
+
+    <p
+     style="font-size:11px;color:#666;margin-bottom:0"
+    >
+     Free space: emotionally unavailable · Physical disk: somewhere under the desk.
+    </p>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- WELCOME -->
+
+ <section
+  class="xp-window"
+  id="welcome"
+  style="left:28%;top:14%;width:690px"
+  aria-labelledby="welcome-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="welcome-title"
+   >
+    Ghaziabad.exe — Welcome
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="welcome-head">
+
+    <div class="tiny">
+     SYSTEM RESTORE POINT · GHAZIABAD, NCR · CIRCA 2004–2012
+    </div>
+
+    <h1>
+     WELCOME TO THE INTERNET BEFORE IT FOLLOWED YOU.
+    </h1>
+
+    <p>
+     One dusty monitor. ₹20 an hour. Orkut scraps. Yahoo Messenger.
+     LAN cables. MP3 folders. School bags thrown into a corner.
+     Somehow, that was enough.
+    </p>
+
+   </div>
+
+
+   <div class="receipt">
+
+    GHAZIABAD CYBER ZONE<br>
+    --------------------------------<br>
+    PC No. 07 &nbsp;&nbsp; TIME: 5:42 PM<br>
+    INTERNET &nbsp;&nbsp;&nbsp;&nbsp; ₹20 / HOUR<br>
+    PRINTING &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ₹2 / PAGE<br>
+    CS 1.6 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INCLUDED<br>
+    --------------------------------<br>
+    TOTAL: ₹20<br>
+    “Bhaiya, ek aur hour laga do.”<br>
+    --------------------------------
+
+   </div>
+
+
+   <p>
+
+    <button
+     class="xp-btn"
+     id="randomMemory"
+    >
+     Tell me something I forgot
+    </button>
+
+    <button
+     class="xp-btn"
+     data-open="internet"
+    >
+     Open Internet Explorer
+    </button>
+
+    <button
+     class="xp-btn"
+     data-open="games"
+    >
+     Play something
+    </button>
+
+   </p>
+
+
+   <div
+    id="memoryStatus"
+    class="xp-status"
+    role="status"
+    aria-live="polite"
+   ></div>
+
+
+   <p
+    style="font-size:10px;color:#777"
+   >
+    Try:
+    <b>G</b> = Games ·
+    <b>M</b> = music player ·
+    <b>Esc</b> = close windows ·
+    drag title bars on desktop.
+   </p>
+
+  </div>
+
+ </section>
+
+
+ <!-- INTERNET EXPLORER -->
+
+ <section
+  class="xp-window"
+  id="internet"
+  style="left:18%;top:8%;width:720px"
+  aria-labelledby="ie-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="ie-title"
+   >
+    Microsoft Internet Explorer — http://www.orkut.com/
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="xp-toolbar">
+
+    <button
+     class="xp-btn"
+     id="ieBack"
+    >
+     ←
+    </button>
+
+    <button
+     class="xp-btn"
+     id="ieRefresh"
+    >
+     ↻
+    </button>
+
+    <span style="font-size:11px">
+     Address
+    </span>
+
+    <input
+     id="ieAddress"
+     class="xp-input"
+     value="http://www.orkut.com/"
+     style="flex:1"
+     aria-label="Simulated address"
+    >
+
+    <button
+     class="xp-btn"
+     id="ieGo"
+    >
+     Go
+    </button>
+
+   </div>
+
+
+   <div
+    class="ie-page"
+    style="margin-top:7px"
+   >
+
+    <div class="ie-banner">
+
+     <h2>
+      Welcome to your old internet.
+     </h2>
+
+     <div
+      style="font-size:11px;color:#555"
+     >
+      This is a harmless local simulation.
+      No real site is contacted.
+     </div>
+
+    </div>
+
+
+    <div
+     class="ie-content"
+     id="ieContent"
+    >
+
+     <div class="web-result">
+
+      <h3>
+       Orkut scraps
+      </h3>
+
+      <p>
+       “hey... remember me? add me.”
+      </p>
+
+      <button
+       class="xp-btn"
+       data-ie-memory="orkut"
+      >
+       Open scrap
+      </button>
+
+     </div>
+
+
+     <div class="web-result">
+
+      <h3>
+       Cyber café memories
+      </h3>
+
+      <p>
+       ₹20/hour · dusty keyboard · one chair · three friends · one Counter-Strike match.
+      </p>
+
+      <button
+       class="xp-btn"
+       data-ie-memory="cafe"
+      >
+       Open receipt
+      </button>
+
+     </div>
+
+
+     <div class="web-result">
+
+      <h3>
+       MP3 download
+      </h3>
+
+      <p>
+       SONG_FINAL_NEW.mp3 · 4.7 MB · 12 minutes remaining
+      </p>
+
+      <button
+       class="xp-btn"
+       id="fakeDownload"
+      >
+       Download
+      </button>
+
+     </div>
+
+
+     <div class="web-result">
+
+      <h3>
+       Dial-up mindset
+      </h3>
+
+      <p>
+       Open a page. Wait. Listen. Hope.
+      </p>
+
+      <button
+       class="xp-btn"
+       id="connect"
+      >
+       Connect
+      </button>
+
+     </div>
+
+    </div>
+
+
+    <div
+     id="ieStatus"
+     class="xp-status"
+     style="padding:0 10px 10px"
+     role="status"
+     aria-live="polite"
+    ></div>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- GAMES -->
+
+ <section
+  class="xp-window"
+  id="games"
+  style="left:33%;top:9%;width:610px"
+  aria-labelledby="games-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="games-title"
+   >
+    Games — C:\Program Files\Games
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="game-wrap">
+
+    <h2 style="margin:0 0 3px">
+     SNAKE.EXE
+    </h2>
+
+    <div class="game-score">
+     SCORE:
+     <span id="score">0</span>
+     · ARROWS / WASD
+    </div>
+
+    <div
+     id="snake"
+     aria-label="Snake game board"
+    ></div>
+
+
+    <div class="dpad">
+
+     <button
+      class="xp-btn"
+      data-dir="up"
+     >
+      ↑
+     </button>
+
+     <br>
+
+     <button
+      class="xp-btn"
+      data-dir="left"
+     >
+      ←
+     </button>
+
+     <button
+      class="xp-btn"
+      data-dir="down"
+     >
+      ↓
+     </button>
+
+     <button
+      class="xp-btn"
+      data-dir="right"
+     >
+      →
+     </button>
+
+    </div>
+
+
+    <p>
+
+     <button
+      class="xp-btn"
+      id="snakeStart"
+     >
+      START / RESTART
+     </button>
+
+    </p>
+
+   </div>
+
+
+   <div
+    class="xp-panel"
+    style="margin-top:8px"
+   >
+    <b>Installed:</b>
+    Counter-Strike 1.6 · GTA Vice City · NFS Underground · Road Rash · Prince of Persia
+    <br><br>
+    <span style="color:#666">
+     The games are memories, not playable commercial copies.
+    </span>
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- MUSIC -->
+
+ <section
+  class="xp-window"
+  id="music"
+  style="right:6%;top:14%;width:570px"
+  aria-labelledby="music-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="music-title"
+   >
+    Windows Media Player — My Music
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="media">
+
+    <div class="media-top">
+
+     <div class="album">
+      💿
+     </div>
+
+     <div>
+
+      <h2 id="trackName">
+       2000s Indian Nostalgia
+      </h2>
+
+      <small>
+       Playback is optional · no autoplay
+      </small>
+
+      <div
+       class="equalizer"
+       aria-hidden="true"
+      >
+       <i></i>
+       <i></i>
+       <i></i>
+       <i></i>
+       <i></i>
+      </div>
+
+     </div>
+
+    </div>
+
+
+    <div class="tracklist">
+
+     <div
+      class="track"
+      data-query="2000s Hindi songs India nostalgia"
+     >
+      ▶ 2000s Hindi nostalgia
+     </div>
+
+     <div
+      class="track"
+      data-query="2000s Bollywood songs playlist"
+     >
+      ▶ Bollywood playlist
+     </div>
+
+     <div
+      class="track"
+      data-query="2000s Indian pop songs"
+     >
+      ▶ Indian pop
+     </div>
+
+     <div
+      class="track"
+      data-query="2000s Hindi romantic songs"
+     >
+      ▶ Old romantic favourites
+     </div>
+
+    </div>
+
+
+    <p
+     style="font-size:10px;color:#aaa"
+    >
+     Selecting a track opens a clearly labelled YouTube search
+     in a new tab. If offline, this player remains a visual/local fallback.
+    </p>
+
+
+    <div
+     id="musicStatus"
+     role="status"
+     aria-live="polite"
+    ></div>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- MESSENGER -->
+
+ <section
+  class="xp-window"
+  id="messenger"
+  style="left:9%;top:21%;width:590px"
+  aria-labelledby="msg-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="msg-title"
+   >
+    Yahoo! Messenger — 3 friends online
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="messenger">
+
+    <aside class="contacts">
+
+     <div class="contact">
+
+      <span class="online">
+       ●
+      </span>
+      Rohit
+
+      <br>
+
+      <small>
+       “CS tonight?”
+      </small>
+
+     </div>
+
+
+     <div class="contact">
+
+      <span class="online">
+       ●
+      </span>
+      Neha
+
+      <br>
+
+      <small>
+       “Check scraps 😂”
+      </small>
+
+     </div>
+
+
+     <div class="contact">
+
+      <span class="online">
+       ●
+      </span>
+      Aman
+
+      <br>
+
+      <small>
+       “Send that song”
+      </small>
+
+     </div>
+
+
+     <div class="contact">
+
+      <span class="offline">
+       ●
+      </span>
+      Pooja
+
+      <br>
+
+      <small>
+       Offline
+      </small>
+
+     </div>
+
+    </aside>
+
+
+    <div class="chat-area">
+
+     <div
+      class="chat-log"
+      id="chatLog"
+     >
+
+      <div class="chat-system">
+       *** You have joined the conversation.
+      </div>
+
+      <div class="chat-msg">
+       <b>Rohit:</b>
+       bhai online?
+      </div>
+
+      <div class="chat-msg">
+       <b>You:</b>
+       haan. cyber cafe mein hoon.
+      </div>
+
+      <div class="chat-msg">
+       <b>Rohit:</b>
+       20 min mein cs?
+      </div>
+
+      <div class="chat-msg">
+       <b>Neha:</b>
+       scraps check kar 😂
+      </div>
+
+     </div>
+
+
+     <div class="chat-send">
+
+      <input
+       id="chatInput"
+       class="xp-input"
+       maxlength="120"
+       placeholder="Type a local message..."
+       aria-label="Chat message"
+       style="flex:1"
+      >
+
+      <button
+       class="xp-btn"
+       id="sendChat"
+      >
+       Send
+      </button>
+
+      <button
+       class="xp-btn"
+       id="buzz"
+      >
+       Buzz!
+      </button>
+
+     </div>
+
+    </div>
+
+   </div>
+
+
+   <div
+    id="chatStatus"
+    class="xp-status"
+    role="status"
+    aria-live="polite"
+   ></div>
+
+  </div>
+
+ </section>
+
+
+ <!-- PHOTOS -->
+
+ <section
+  class="xp-window"
+  id="photos"
+  style="right:8%;top:23%;width:530px"
+  aria-labelledby="photos-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="photos-title"
+   >
+    My Pictures — Ghaziabad_2007
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="memory-grid">
+
+    <div class="memory-card">
+
+     <span class="emoji">
+      📸
+     </span>
+
+     <h3>
+      School Gate
+     </h3>
+
+     <p>
+      Uniform half-tucked. Bag heavier than it needed to be.
+     </p>
+
+    </div>
+
+
+    <div class="memory-card">
+
+     <span class="emoji">
+      📸
+     </span>
+
+     <h3>
+      Cyber Café
+     </h3>
+
+     <p>
+      “Bhaiya, ek aur hour laga do.”
+      The universal extension request.
+     </p>
+
+    </div>
+
+
+    <div class="memory-card">
+
+     <span class="emoji">
+      📸
+     </span>
+
+     <h3>
+      Colony Cricket
+     </h3>
+
+     <p>
+      Two bricks were stumps.
+      Boundary changed whenever an adult complained.
+     </p>
+
+    </div>
+
+
+    <div class="memory-card">
+
+     <span class="emoji">
+      📸
+     </span>
+
+     <h3>
+      Summer Vacation
+     </h3>
+
+     <p>
+      Cooler on. Mangoes everywhere. Cousins refusing to sleep.
+     </p>
+
+    </div>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- NOTEPAD -->
+
+ <section
+  class="xp-window"
+  id="notepad"
+  style="left:36%;top:26%;width:540px"
+  aria-labelledby="note-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="note-title"
+   >
+    Notepad — Important.txt
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <textarea
+    class="note"
+    id="noteText"
+    aria-label="Local memory note"
+   >IMPORTANT.TXT
+
+- ₹20 cyber café hour
+- Bluetooth = “send me that song”
+- Missed call = a complete sentence.
+- “Final”, “Final2”, “Final_NEW” were valid filenames.
+- Don't forget the cheat codes.
+- If you got caught using the internet after school, deny everything.
+
+This note stays on this device only.</textarea>
+
+
+   <p>
+
+    <button
+     class="xp-btn"
+     id="saveNote"
+    >
+     Save locally
+    </button>
+
+    <button
+     class="xp-btn"
+     id="resetNote"
+    >
+     Restore
+    </button>
+
+    <span
+     id="noteStatus"
+     class="xp-status"
+     style="display:inline-block"
+    ></span>
+
+   </p>
+
+  </div>
+
+ </section>
+
+
+ <!-- GUESTBOOK -->
+
+ <section
+  class="xp-window"
+  id="guestbook"
+  style="left:21%;top:12%;width:610px"
+  aria-labelledby="guest-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="guest-title"
+   >
+    Guestbook — Leave a Scrap
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="xp-panel">
+
+    <b>
+     Leave a memory.
+    </b>
+
+    This guestbook is local to your browser.
+    Nothing is uploaded.
+
+   </div>
+
+
+   <p>
+
+    <input
+     id="guestName"
+     class="xp-input"
+     maxlength="30"
+     placeholder="Nickname"
+     aria-label="Nickname"
+     style="width:100%"
+    >
+
+   </p>
+
+
+   <p>
+
+    <textarea
+     id="guestMessage"
+     class="xp-input"
+     maxlength="180"
+     rows="3"
+     placeholder="Your favourite 2000s memory..."
+     aria-label="Memory"
+     style="width:100%"
+    ></textarea>
+
+   </p>
+
+
+   <button
+    class="xp-btn"
+    id="signGuest"
+   >
+    Sign guestbook
+   </button>
+
+
+   <div
+    id="guestEntries"
+    aria-live="polite"
+   ></div>
+
+  </div>
+
+ </section>
+
+
+ <!-- RECYCLE BIN -->
+
+ <section
+  class="xp-window"
+  id="recycle"
+  style="right:21%;top:25%;width:450px"
+  aria-labelledby="recycle-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="recycle-title"
+   >
+    Recycle Bin
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="xp-panel">
+
+    <p
+     style="font-size:22px;margin:0"
+    >
+     🗑️
+    </p>
+
+    <p>
+     <b>1 item</b>
+    </p>
+
+    <div class="memory-card">
+     “I’ll start studying tomorrow.txt”
+    </div>
+
+    <br>
+
+    <button
+     class="xp-btn"
+     id="restore"
+    >
+     Restore
+    </button>
+
+    <p
+     id="restoreStatus"
+     class="xp-status"
+     role="status"
+    ></p>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- ABOUT -->
+
+ <section
+  class="xp-window"
+  id="about"
+  style="left:25%;top:17%;width:630px"
+  aria-labelledby="about-title"
+ >
+
+  <div class="titlebar">
+
+   <span
+    class="title"
+    id="about-title"
+   >
+    Ghaziabad.exe — About
+   </span>
+
+   <span class="win-controls">
+
+    <button
+     class="win-control"
+     data-close
+     aria-label="Close"
+    >
+     ×
+    </button>
+
+   </span>
+
+  </div>
+
+
+  <div class="window-content">
+
+   <div class="xp-panel">
+
+    <h2
+     style="color:#0756a0;margin-top:0"
+    >
+     Ghaziabad.exe
+    </h2>
+
+    <p>
+     <b>
+      An interactive digital time capsule of Ghaziabad's 2000s internet and childhood culture.
+     </b>
+    </p>
+
+    <p>
+     Built as a single offline-capable HTML experience.
+     No account, backend, API key, database or password collection.
+    </p>
+
+    <p>
+     Explore the desktop, open old-school apps, play Snake,
+     leave a local scrap and find the hidden memories.
+    </p>
+
+    <hr>
+
+    <p
+     style="font-size:10px;color:#666"
+    >
+     This is an independent creative nostalgia project.
+     Microsoft, Windows, Yahoo!, Orkut, Nokia and game titles are
+     referenced for historical/cultural context and are not represented
+     as official products or partnerships.
+    </p>
+
+    <button
+     class="xp-btn"
+     id="copyShare"
+    >
+     Copy share message
+    </button>
+
+    <span
+     id="shareStatus"
+     class="xp-status"
+     style="display:inline-block"
+    ></span>
+
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- START MENU -->
+
+ <div
+  id="startMenu"
+  aria-label="Start menu"
+ >
+
+  <div class="start-head">
+
+   Ghaziabad.exe
+
+   <small>
+    Childhood Edition
+   </small>
+
+  </div>
+
+
+  <div class="start-body">
+
+   <div class="start-left">
+
+    <button
+     class="start-item"
+     data-open="mycomputer"
+    >
+     <span class="si">🖥️</span>
+
+     <span>
+      <b>My Computer</b>
+      <br>
+      <small>Explore files</small>
+     </span>
+
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="internet"
+    >
+     <span class="si">🌐</span>
+
+     <span>
+      <b>Internet Explorer</b>
+      <br>
+      <small>Go online</small>
+     </span>
+
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="messenger"
+    >
+     <span class="si">💬</span>
+
+     <span>
+      <b>Yahoo! Messenger</b>
+      <br>
+      <small>3 friends online</small>
+     </span>
+
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="games"
+    >
+     <span class="si">🎮</span>
+
+     <span>
+      <b>Games</b>
+      <br>
+      <small>Counter-Strike memories</small>
+     </span>
+
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="music"
+    >
+     <span class="si">💿</span>
+
+     <span>
+      <b>Windows Media Player</b>
+      <br>
+      <small>My Music</small>
+     </span>
+
+    </button>
+
+   </div>
+
+
+   <div class="start-right">
+
+    <button
+     class="start-item"
+     data-open="photos"
+    >
+     <span class="si">📷</span>
+     My Pictures
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="notepad"
+    >
+     <span class="si">📝</span>
+     Notepad
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="guestbook"
+    >
+     <span class="si">📖</span>
+     Guestbook
+    </button>
+
+
+    <button
+     class="start-item"
+     data-open="about"
+    >
+     <span class="si">💾</span>
+     About
+    </button>
+
+
+    <hr>
+
+
+    <button
+     class="start-item"
+     id="shutdown"
+    >
+     <span class="si">⏻</span>
+     Shut Down
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div
+  id="status"
+  role="status"
+  aria-live="polite"
+ ></div>
+
+
+ <div
+  id="musicBar"
+  aria-label="Nostalgia music player"
+ >
+
+  <span class="disc">
+   💿
+  </span>
+
+  <div class="music-info">
+
+   <b id="barTrack">
+    2000s Indian nostalgia
+   </b>
+
+   <a
+    id="barLink"
+    href="https://www.youtube.com/results?search_query=2000s+Hindi+songs+India+nostalgia"
+    target="_blank"
+    rel="noopener noreferrer"
+   >
+    Open YouTube search
+   </a>
+
+  </div>
+
+  <button
+   class="mini-close"
+   id="hideMusic"
+   aria-label="Hide music player"
+  >
+   ×
+  </button>
+
+ </div>
+
+
+ <!-- TASKBAR -->
+
+ <div id="taskbar">
+
+  <button
+   id="startButton"
+   aria-expanded="false"
+  >
+   <span>⊞</span>
+   start
+  </button>
+
+  <div id="taskButtons"></div>
+
+  <div id="tray">
+
+   <span>
+    🔊
+   </span>
+
+   <span>
+    🌐
+   </span>
+
+   <span id="trayTime">
+    12:00 PM
+   </span>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<!-- SECRET EASTER EGG -->
+
+<div
+ id="secretOverlay"
+ role="dialog"
+ aria-modal="true"
+ aria-labelledby="secretTitle"
+>
+
+ <div class="secret-box">
+
+  <h2 id="secretTitle">
+   Windows XP — Secret.exe
+  </h2>
+
+  <div class="secret-body">
+
+   <div class="big">
+    🦋
+   </div>
+
+   <h3>
+    You found the memory.
+   </h3>
+
+   <p>
+    Some things were never really deleted.
+    <br><br>
+    <b>
+     C:\Childhood\memories\cannot_delete
+    </b>
+   </p>
+
+   <button
+    class="xp-btn"
+    id="closeSecret"
+   >
+    Okay
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<script>
+(function(){
+
+"use strict";
+
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+
+let z=20;
+let started=false;
+
+
+function toast(text){
+
+ const s=$('#status');
+
+ s.textContent=text;
+
+ s.classList.add('show');
+
+ clearTimeout(toast.timer);
+
+ toast.timer=setTimeout(
+   ()=>s.classList.remove('show'),
+   2500
+ );
+
+}
+
+
+function openWindow(id){
+
+ const w=$('#'+id);
+
+ if(!w)return;
+
+ w.classList.add('open');
+
+ w.style.zIndex=++z;
+
+ let task=$('#task-'+id);
+
+ if(!task){
+
+  task=document.createElement('button');
+
+  task.className='task-button';
+
+  task.id='task-'+id;
+
+  task.textContent=w.querySelector('.title').textContent;
+
+  task.title=task.textContent;
+
+  task.onclick=()=>{
+
+   w.classList.add('open');
+
+   w.style.zIndex=++z;
+
+   updateTasks();
+
+  };
+
+  $('#taskButtons').appendChild(task);
+
+ }
+
+ updateTasks();
+
+ toast(
+   "Opened "+w.querySelector('.title').textContent
+ );
+
+}
+
+
+function closeWindow(w){
+
+ if(!w)return;
+
+ w.classList.remove('open');
+
+ const t=$('#task-'+w.id);
+
+ if(t)t.remove();
+
+ updateTasks();
+
+}
+
+
+function updateTasks(){
+
+ $$('.task-button').forEach(t=>{
+
+  const w=$('#'+t.id.replace('task-',''));
+
+  t.classList.toggle(
+   'active',
+   w &&
+   w.classList.contains('open') &&
+   +w.style.zIndex ===
+   Math.max(
+    ...$$('.xp-window.open')
+     .map(x=>+x.style.zIndex||0)
+   )
+  );
+
+ });
+
+}
+
+
+function startApp(){
+
+ if(started)return;
+
+ started=true;
+
+ $('#boot').style.display='none';
+
+ openWindow('welcome');
+
+ toast('Welcome back to Ghaziabad.exe');
+
+}
+
+
+function bootProgress(){
+
+ let p=0;
+
+ const i=setInterval(()=>{
+
+  p+=8;
+
+  $('#bootProgress').style.width=p+'%';
+
+  if(p>=100)clearInterval(i);
+
+ },100);
+
+}
+
+
+$('#boot').addEventListener(
+ 'click',
+ startApp
+);
+
+
+document.addEventListener(
+ 'keydown',
+ e=>{
+
+  if(!started && e.key==='Enter'){
+   startApp();
+  }
+
+ }
+);
+
+
+bootProgress();
+
+
+$('#startButton').addEventListener(
+ 'click',
+ ()=>{
+
+  const m=$('#startMenu');
+
+  const open=m.classList.toggle('open');
+
+  $('#startButton').setAttribute(
+   'aria-expanded',
+   open
+  );
+
+ }
+);
+
+
+document.addEventListener(
+ 'click',
+ e=>{
+
+  const o=e.target.closest('[data-open]');
+
+  if(o){
+
+   openWindow(o.dataset.open);
+
+   $('#startMenu').classList.remove('open');
+
+   $('#startButton').setAttribute(
+    'aria-expanded',
+    'false'
+   );
+
+  }
+
+
+  const c=e.target.closest('[data-close]');
+
+  if(c){
+   closeWindow(c.closest('.xp-window'));
+  }
+
+ }
+);
+
+
+document.addEventListener(
+ 'keydown',
+ e=>{
+
+  if(!started)return;
+
+  if(e.key==='Escape'){
+
+   $$('.xp-window.open').forEach(closeWindow);
+
+   $('#startMenu').classList.remove('open');
+
+  }
+
+
+  if(
+   !['INPUT','TEXTAREA'].includes(
+    document.activeElement.tagName
+   )
+  ){
+
+   if(e.key.toLowerCase()==='g'){
+    openWindow('games');
+   }
+
+   if(e.key.toLowerCase()==='m'){
+
+    $('#musicBar').style.display='flex';
+
+    openWindow('music');
+
+   }
+
+  }
+
+ }
+);
+
+
+/* DRAGGABLE WINDOWS */
+
+$$('.xp-window').forEach(w=>{
+
+ const bar=w.querySelector('.titlebar');
+
+ let drag=false;
+ let ox=0;
+ let oy=0;
+
+
+ function begin(x,y){
+
+  if(innerWidth<=700)return;
+
+  drag=true;
+
+  ox=x-w.offsetLeft;
+
+  oy=y-w.offsetTop;
+
+  w.style.zIndex=++z;
+
+  updateTasks();
+
+ }
+
+
+ bar.addEventListener(
+  'mousedown',
+  e=>begin(e.clientX,e.clientY)
+ );
+
+
+ bar.addEventListener(
+  'touchstart',
+  e=>{
+
+   const t=e.touches[0];
+
+   begin(t.clientX,t.clientY);
+
+  },
+  {passive:true}
+ );
+
+
+ function move(x,y){
+
+  if(!drag)return;
+
+  w.style.left=
+   Math.max(
+    4,
+    Math.min(
+     innerWidth-w.offsetWidth-4,
+     x-ox
+    )
+   )+'px';
+
+  w.style.top=
+   Math.max(
+    38,
+    Math.min(
+     innerHeight-w.offsetHeight-43,
+     y-oy
+    )
+   )+'px';
+
+  w.style.right='auto';
+
+ }
+
+
+ document.addEventListener(
+  'mousemove',
+  e=>move(e.clientX,e.clientY)
+ );
+
+
+ document.addEventListener(
+  'touchmove',
+  e=>{
+
+   if(e.touches[0]){
+    move(
+     e.touches[0].clientX,
+     e.touches[0].clientY
+    );
+   }
+
+  },
+  {passive:true}
+ );
+
+
+ document.addEventListener(
+  'mouseup',
+  ()=>drag=false
+ );
+
+
+ document.addEventListener(
+  'touchend',
+  ()=>drag=false
+ );
+
+
+ w.addEventListener(
+  'mousedown',
+  ()=>{
+   w.style.zIndex=++z;
+   updateTasks();
+  }
+ );
+
+});
+
+
+/* MEMORIES */
+
+const memories=[
+
+ 'The first person to say “Bhai, pen drive hai?” instantly became your best friend.',
+
+ '₹20 could buy an hour online and somehow three hours of childhood.',
+
+ '“NEW SONGS” had at least five folders, and none of them contained new songs.',
+
+ 'A missed call was sometimes the entire conversation.',
+
+ 'The cyber café owner knew who came for Orkut and who came only for Counter-Strike.',
+
+ 'Bluetooth transfer had the suspense of a cricket final.',
+
+ '“Bhaiya, ek aur hour laga do” was a legitimate financial strategy.',
+
+ 'You never knew if the PC would have sound until you clicked play.'
+
+];
+
+
+$('#randomMemory').onclick=()=>{
+
+ const t=
+  memories[
+   Math.floor(
+    Math.random()*memories.length
+   )
+  ];
+
+ $('#memoryStatus').textContent=t;
+
+ toast(t);
+
+};
+
+
+/* INTERNET EXPLORER */
+
+$('#ieBack').onclick=()=>{
+
+ $('#ieStatus').textContent=
+  'Back button clicked. Nothing real was loaded.';
+
+};
+
+
+$('#ieRefresh').onclick=()=>{
+
+ $('#ieStatus').textContent=
+  'Refreshing... 56k nostalgia detected.';
+
+};
+
+
+$('#ieGo').onclick=()=>{
+
+ $('#ie-title').textContent=
+  'Microsoft Internet Explorer — Local Simulation';
+
+ $('#ieStatus').textContent=
+  'Real websites are disabled inside this time capsule.';
+
+};
+
+
+$$('[data-ie-memory]').forEach(
+ b=>b.addEventListener(
+  'click',
+  ()=>{
+
+   const type=b.dataset.ieMemory;
+
+   $('#ieContent').innerHTML=
+    type==='orkut'
+
+    ?
+
+    '<div class="xp-panel">'+
+    '<h3 style="color:#e45b21">Scrap from Rohit</h3>'+
+    '<p>“hey bro!! nice profile pic. join our community 😂”</p>'+
+    '<p style="color:#777">Posted: sometime before everyone had a smartphone.</p>'+
+    '<button class="xp-btn" id="ieHome">Back to homepage</button>'+
+    '</div>'
+
+    :
+
+    '<div class="receipt">'+
+    '<b>GHAZIABAD CYBER ZONE</b><br>'+
+    'PC 07 · 5:42 PM<br>'+
+    'Internet: ₹20<br>'+
+    'CS 1.6: included<br>'+
+    'Printing: ₹4<br>'+
+    '----------------<br>'+
+    'TOTAL: ₹24<br><br>'+
+    '“Bhaiya, net band mat karna.”<br><br>'+
+    '<button class="xp-btn" id="ieHome">Back to homepage</button>'+
+    '</div>';
+
+
+   $('#ieHome').onclick=()=>location.reload();
+
+  }
+ )
+);
+
+
+$('#fakeDownload').onclick=()=>{
+
+ let n=0;
+
+ const s=$('#ieStatus');
+
+ const i=setInterval(()=>{
+
+  n+=20;
+
+  s.textContent=
+   'Downloading SONG_FINAL_NEW.mp3... '+
+   n+'%';
+
+  if(n>=100){
+
+   clearInterval(i);
+
+   s.textContent=
+    'Download complete — safely simulated. No real file was created.';
+
+  }
+
+ },180);
+
+};
+
+
+$('#connect').onclick=()=>{
+
+ $('#ieStatus').textContent=
+  'Connected! (simulation) · 56k attitude activated.';
+
+};
+
+
+/* MUSIC */
+
+$$('.track').forEach(
+ t=>t.addEventListener(
+  'click',
+  ()=>{
+
+   const q=
+    encodeURIComponent(
+     t.dataset.query
+    );
+
+   $('#trackName').textContent=
+    t.textContent.replace('▶ ','');
+
+   $('#barTrack').textContent=
+    t.textContent.replace('▶ ','');
+
+   $('#barLink').href=
+    'https://www.youtube.com/results?search_query='+
+    q;
+
+   $('#musicStatus').textContent=
+    'YouTube search updated. Playback never autostarts.';
+
+   toast('Music search ready');
+
+  }
+ )
+);
+
+
+$('#hideMusic').onclick=()=>{
+
+ $('#musicBar').style.display='none';
+
+ toast(
+  'Music player hidden. Press M to bring it back.'
+ );
+
+};
+
+
+/* CHAT */
+
+function sendChat(){
+
+ const input=$('#chatInput');
+
+ const v=input.value.trim();
+
+ if(!v)return;
+
+ const d=document.createElement('div');
+
+ d.className='chat-msg';
+
+ const b=document.createElement('b');
+
+ b.textContent='You:';
+
+ d.append(
+  b,
+  document.createTextNode(' '+v)
+ );
+
+ $('#chatLog').appendChild(d);
+
+ input.value='';
+
+ $('#chatLog').scrollTop=9999;
+
+ $('#chatStatus').textContent=
+  'Message added locally.';
+
+}
+
+
+$('#sendChat').onclick=sendChat;
+
+
+$('#chatInput').addEventListener(
+ 'keydown',
+ e=>{
+  if(e.key==='Enter')sendChat();
+ }
+);
+
+
+$('#buzz').onclick=()=>{
+
+ $('#chatStatus').textContent=
+  'BUZZ! sent — harmless local effect.';
+
+ toast('BUZZ!');
+
+};
+
+
+/* NOTEPAD */
+
+try{
+
+ const n=
+  localStorage.getItem(
+   'ghaziabadNote'
+  );
+
+ if(n)
+  $('#noteText').value=n;
+
+}catch(e){}
+
+
+const originalNote=
+ $('#noteText').value;
+
+
+$('#saveNote').onclick=()=>{
+
+ try{
+
+  localStorage.setItem(
+   'ghaziabadNote',
+   $('#noteText').value
+  );
+
+  $('#noteStatus').textContent=
+   'Saved on this device only.';
+
+ }catch(e){
+
+  $('#noteStatus').textContent=
+   'Local storage unavailable.';
+
+ }
+
+};
+
+
+$('#resetNote').onclick=()=>{
+
+ $('#noteText').value=
+  originalNote;
+
+ $('#noteStatus').textContent=
+  'Original note restored.';
+
+};
+
+
+/* GUESTBOOK */
+
+$('#signGuest').onclick=()=>{
+
+ const name=
+  $('#guestName').value.trim()||
+  'Anonymous';
+
+ const msg=
+  $('#guestMessage').value.trim();
+
+ if(!msg){
+
+  toast('Write a memory first.');
+
+  return;
+
+ }
+
+
+ const box=
+  document.createElement('div');
+
+ box.className=
+  'guest-entry';
+
+
+ const strong=
+  document.createElement('strong');
+
+ strong.textContent=name;
+
+
+ const span=
+  document.createElement('span');
+
+ span.textContent=
+  ' — '+msg;
+
+
+ const small=
+  document.createElement('small');
+
+ small.textContent=
+  ' · just now · local only';
+
+
+ box.append(
+  strong,
+  span,
+  small
+ );
+
+
+ $('#guestEntries').prepend(box);
+
+ $('#guestName').value='';
+
+ $('#guestMessage').value='';
+
+ toast('Scrap pinned locally.');
+
+};
+
+
+/* RECYCLE */
+
+$('#restore').onclick=()=>{
+
+ $('#restoreStatus').textContent=
+  'Restored. You will definitely study tomorrow.';
+
+ toast('Item restored.');
+
+};
+
+
+/* SHARE */
+
+$('#copyShare').onclick=async()=>{
+
+ const text=
+  'I found Ghaziabad.exe — an interactive time capsule of 2000s Indian internet culture. '+
+  location.href;
+
+ try{
+
+  await navigator.clipboard.writeText(text);
+
+  $('#shareStatus').textContent=
+   'Share message copied.';
+
+ }catch(e){
+
+  $('#shareStatus').textContent=
+   'Copy unavailable; share text is ready.';
+
+ }
+
+};
+
+
+/* SNAKE */
+
+let snake=[];
+let food={x:9,y:5};
+let dir={x:1,y:0};
+let next={x:1,y:0};
+let running=false;
+let score=0;
+let timer;
+
+
+const board=$('#snake');
+
+
+function drawSnake(){
+
+ board.innerHTML='';
+
+
+ for(
+  let y=0;
+  y<14;
+  y++
+ ){
+
+  for(
+   let x=0;
+   x<14;
+   x++
+  ){
+
+   const c=
+    document.createElement('div');
+
+   c.className=
+    'snake-cell';
+
+
+   if(
+    snake.some(
+     s=>s.x===x&&s.y===y
+    )
+   ){
+    c.classList.add('snake');
+   }
+
+
+   if(
+    food.x===x&&
+    food.y===y
+   ){
+    c.classList.add('food');
+   }
+
+
+   board.appendChild(c);
+
+  }
+
+ }
+
+
+ $('#score').textContent=
+  score;
+
+}
+
+
+function resetSnake(){
+
+ snake=[
+  {x:6,y:7},
+  {x:5,y:7},
+  {x:4,y:7}
+ ];
+
+ food={
+  x:10,
+  y:4
+ };
+
+ dir={
+  x:1,
+  y:0
+ };
+
+ next={
+  x:1,
+  y:0
+ };
+
+ score=0;
+
+ drawSnake();
+
+}
+
+
+function snakeTick(){
+
+ dir=next;
+
+ const h={
+  x:(snake[0].x+dir.x+14)%14,
+  y:(snake[0].y+dir.y+14)%14
+ };
+
+
+ if(
+  snake.some(
+   s=>s.x===h.x&&s.y===h.y
+  )
+ ){
+
+  running=false;
+
+  toast(
+   'Game over — score '+score
+  );
+
+  return;
+
+ }
+
+
+ snake.unshift(h);
+
+
+ if(
+  h.x===food.x&&
+  h.y===food.y
+ ){
+
+  score++;
+
+  do{
+
+   food={
+    x:Math.floor(Math.random()*14),
+    y:Math.floor(Math.random()*14)
+   };
+
+  }while(
+   snake.some(
+    s=>s.x===food.x&&s.y===food.y
+   )
+  );
+
+ }else{
+
+  snake.pop();
+
+ }
+
+
+ drawSnake();
+
+}
+
+
+function setDir(d){
+
+ const map={
+  up:{x:0,y:-1},
+  down:{x:0,y:1},
+  left:{x:-1,y:0},
+  right:{x:1,y:0}
+ };
+
+ const n=map[d];
+
+ if(!n)return;
+
+
+ if(
+  n.x+dir.x!==0||
+  n.y+dir.y!==0
+ ){
+
+  next=n;
+
+ }
+
+}
+
+
+$$('[data-dir]').forEach(
+ b=>b.onclick=
+ ()=>setDir(b.dataset.dir)
+);
+
+
+$('#snakeStart').onclick=()=>{
+
+ clearInterval(timer);
+
+ resetSnake();
+
+ running=true;
+
+ timer=setInterval(
+  ()=>{
+   if(running)snakeTick();
+  },
+  130
+ );
+
+};
+
+
+document.addEventListener(
+ 'keydown',
+ e=>{
+
+  if(
+   !started||
+   !$('#games').classList.contains('open')
+  )return;
+
+
+  const map={
+   ArrowUp:'up',
+   ArrowDown:'down',
+   ArrowLeft:'left',
+   ArrowRight:'right',
+   w:'up',
+   a:'left',
+   s:'down',
+   d:'right'
+  };
+
+
+  if(map[e.key]){
+
+   setDir(map[e.key]);
+
+   e.preventDefault();
+
+  }
+
+ }
+);
+
+
+resetSnake();
+
+
+/* SHUTDOWN */
+
+$('#shutdown').onclick=()=>{
+
+ $('#startMenu').classList.remove('open');
+
+
+ $('#desktop').innerHTML=
+
+ '<div style="position:absolute;inset:0;background:#000;color:#aaa;display:grid;place-items:center;text-align:center;font:15px Courier New,monospace;padding:30px">'+
+ 'Ghaziabad.exe has shut down.<br><br>'+
+ '<button id="restart" style="padding:8px">Restart childhood</button>'+
+ '</div>';
+
+
+ $('#restart').onclick=
+  ()=>location.reload();
+
+};
+
+
+/* EASTER EGG */
+
+let clicks=0;
+let clickTimer;
+
+
+document.addEventListener(
+ 'dblclick',
+ e=>{
+
+  if(
+   !started||
+   e.target.closest('.xp-window')||
+   e.target.closest('#taskbar')||
+   e.target.closest('#startMenu')
+  )return;
+
+
+  clicks++;
+
+  clearTimeout(clickTimer);
+
+  clickTimer=
+   setTimeout(
+    ()=>clicks=0,
+    1200
+   );
+
+
+  if(clicks>=3){
+
+   clicks=0;
+
+   $('#secretOverlay')
+    .classList.add('show');
+
+   toast(
+    'Secret.exe found!'
+   );
+
+  }
+
+ }
+);
+
+
+$('#closeSecret').onclick=
+ ()=>$('#secretOverlay')
+   .classList.remove('show');
+
+
+document.addEventListener(
+ 'keydown',
+ e=>{
+
+  if(e.key==='Escape')
+   $('#secretOverlay')
+    .classList.remove('show');
+
+ }
+);
+
+
+/* CLOCK */
+
+function clock(){
+
+ const d=new Date();
+
+ $('#trayTime').textContent=
+  d.toLocaleTimeString(
+   [],
+   {
+    hour:'2-digit',
+    minute:'2-digit'
+   }
+  );
+
+
+ if(started){
+
+  document.title=
+   'Ghaziabad.exe — '+
+   d.toLocaleTimeString(
+    [],
+    {
+     hour:'2-digit',
+     minute:'2-digit'
+    }
+   );
+
+ }
+
+}
+
+
+clock();
+
+setInterval(
+ clock,
+ 1000
+);
+
+
+})();
+</script>
+
+</body>
+</html>
